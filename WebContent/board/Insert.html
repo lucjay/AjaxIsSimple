@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form name="frm1" action="../InsertBoardServlet" method="post">
+		<input type="hidden" name="writer" value="user1">
+		<table>
+			<tr>
+				<td>Title</td>
+				<td><input type="text" id="title" name="title"></td>
+			<tr>
+				<td>Content</td>
+				<td><textarea rows="10" cols="40" id="content" name="content"></textarea></td>
+			</tr>
+			<tr align="center">
+				<td colspan="2"><input type="submit" value="전송"> <input
+					type="reset" value="초기화"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

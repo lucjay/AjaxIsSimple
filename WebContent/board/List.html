@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body onload="getBoardList()">
+	<p id="list"></p>
+	<script>
+		var blist = document.getElementById('list');
+		function getBoardList() {
+			//ajax
+			var xhtp = new XMLHttpRequest();
+			xhtp.onreadystatechange = function() {
+				if (xhtp.readyState == 4 && xhtp.status == 200) {
+					createBoardTab(xhtp);
+				}
+			}
+			xhtp.open('get', '../BoardListServlet', true);
+			xhtp.send();
+		}
+		function createBoardTab(obj) {
+			var titles = ["boardNO", "title", "content", "writer", "createDate" ];
+
+			var result = JSON.parse(obj.responseText);
+			console.log(result);			
+			var $table, $tr, $td, $text, $th;
+			$table = document.createElement("table");
+			$table.setAttribute('border', 3);
+			$tr = document.createElement("tr");
+
+			for (field of titles) {
+				$text = document.createTextNode(field.toUpperCase());
+				$th = document.createElement("th");
+				$th.setAttribute("align","center");
+				$th.appendChild($text);
+				$tr.appendChild($th);
+			}
+			
+			$table.appendChild($tr);
+
+			for (idx in result) {
+				$tr = document.createElement("tr");
+				$tr.onmouseover = function() {
+					this.style.backgroundColor = "gold";
+				}
+				$tr.onmouseout = function() {
+					this.style.backgroundColor = "";
+				}
+				for (field of titles) {
+					$text = document.createTextNode(result[idx][field]);
+					$td = document.createElement("td");
+					$td.setAttribute("align","center");
+					if (field == "boardNO"){
+						$a = document.createElement("a");
+						$a.setAttribute("href","board.jsp?boardNo="+result[idx][field]);
+						$a.appendChild($text);
+						$td.appendChild($a);
+					} else {
+						$td.appendChild($text);
+					}
+					$tr.appendChild($td);
+				}
+				$table.appendChild($tr);
+			}
+			blist.appendChild($table);
+		}
+	</script>
+</body>
+</html>

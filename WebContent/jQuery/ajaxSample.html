@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>ajaxSameple.html</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		// Ajax 를 jQuery 사용
+		$(document).ready(
+			function () {
+				//	$.each();
+				$.ajax({
+					url: "../EmpServletJson",
+					dataType: "json",
+					success: function (result) {
+						console.log(result);
+						callBackFunc(result);
+					}
+				});
+
+				function callBackFunc(obj) {
+					var $table, $tr;
+					$table = $("<table>").attr("border", 1).attr("id", "main");
+					$(obj).each(function (i, o) {
+						$tr = $("<tr>").attr("id", obj[i].employeeId);
+						$tr.mouseover(callMover);
+						$tr.mouseout(callMout);
+						$tr.append(
+							$("<td>").text(o.firstName), 
+							$("<td>").text(o.lastName), 
+							$("<td>").text(o.salary),
+							$("<td>").html($("<button>").text("삭제").click(remove_c)));
+
+						$table.append($tr);
+					})
+					$("#show").append($table);
+				}
+				function callMover() {
+					$(this).css("backgroundColor", "gold");
+
+				}
+				function callMout() {
+					$(this).css("backgroundColor", "pink");
+
+				}
+				function remove_c() {
+					var trTag = $(this).parent().parent();
+					console.log($(this).parent().parent());
+					var empId = trTag.attr("id");
+					console.log(empId);
+					//디비처리
+					$.ajax({
+						url: "../DeleteEmpServlet",
+						data: {
+							"empId": empId
+						},
+						success: function () {
+							console.log("success");
+
+						}
+					});
+					$(this).parent().parent().remove(); //화면처리
+				}
+				//전송버튼 클릭 데이터 한건입력
+				$("#submit").click(function () {
+					var frm = $("[name='frm1']");
+					$.ajax({
+						url: frm.attr("action"),
+						data: frm.serialize(),
+						success: function (result) {
+							console.log(result);
+							var newEmpId = result;
+							//화면에 입력된 데이터 나타나도록 추가.
+							createNewEmp();
+						}
+					});
+
+				})
+				function createNewEmp(empId) {
+					var p = $("#main");
+					$tr = $("<tr>").attr("id", empId);
+					$tr.mouseover(callMover).mouseout(callMout);
+					$tr.append(
+						$("<td>").text(empId),
+						$("<td>").text($("#lname").val()),
+						$("<td>").text($("#email").val()),
+						$("<td>").text(0), $("<td>").html($("<button>").text("삭제").click(remove_c)));
+					p.append($tr);
+					//초기화 하고 마우스 이동
+					$("#lName").val("");
+					$("#email").val("");
+					$("#hireDate").val("");
+					$("#lName").focus();
+				}
+			})
+	</script>
+</head>
+
+<body>
+	<form name="frm1" action="../InsertEmpSetvlet">
+		<table border=1>
+			<tr>
+				<td>lastName:</td>
+				<td><input type="text" id="lName" name="lName"></td>
+			</tr>
+			<tr>
+				<td>email:</td>
+				<td><input type="text" id="email" name="email"></td>
+			</tr>
+			<tr>
+				<td>HireDate:</td>
+				<td><input type="date" id="hireDate" name="hireDate"></td>
+			</tr>
+			<tr>
+				<td>JobId:</td>
+				<td><input type="text" name="jobId" value="IT_PROG"></td>
+			</tr>
+			<tr>
+				<td align="center" colspan='2'><input type="button" id="submit" value="전송"></td>
+			</tr>
+		</table>
+	</form>
+	<br>
+	<br>
+	<br>
+	<p id="show"></p>
+</body>
+
+</html>

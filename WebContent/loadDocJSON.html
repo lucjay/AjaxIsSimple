@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>loadDocJSON.html</title>
+</head>
+<body>
+	<div id="show"></div>
+	<button type="button" onclick="loadDoc()">Click</button>
+	<script>
+		function loadDoc() {
+			var xhtp = new XMLHttpRequest();
+			xhtp.onreadystatechange = function() {
+				//		console.log(xhtp.readyState + ", " + xhtp.status);
+				if (xhtp.readyState == 4 && xhtp.status == 200) {
+					callback(xhtp);
+				}
+			}
+			xhtp.open('get', 'EmpServletJson', true); //true:asynchronous
+			xhtp.send();
+		}
+
+		function callback(xhtp) {
+			var result = JSON.parse(xhtp.responseText);
+			var resultAry = result.employees;
+
+			var $text, $tr, $td, $th, $table;
+			$table = document.createElement("table");
+			$table.setAttribute('border', 2);
+
+			$tr = document.createElement("tr");
+
+			for (field in resultAry[0]) {
+				$text = document.createTextNode(field.toUpperCase());
+				$th = document.createElement("th");
+				$th.appendChild($text);
+				$tr.appendChild($th);
+			}
+			var $head = document.createTextNode("추가");
+			$th = document.createElement("th");
+			$th.appendChild($head);
+			$tr.appendChild($th);
+			$table.appendChild($tr);
+
+			for (idx in resultAry) {
+				$tr = document.createElement("tr");
+				for (field in resultAry[idx]) {
+					$text = document.createTextNode(resultAry[idx][field]);
+					$field = resultAry[idx][field];
+					$td = document.createElement("td");
+					$td.appendChild($text);
+					$tr.appendChild($td);
+
+				}
+
+				$text = document.createTextNode("Click");
+				$button = document.createElement("button");
+				$button.onclick = function() {
+					console.log(this.parentNode.parentNode);
+					this.parentNode.parentNode.remove();
+				}
+				$button.appendChild($text);
+				$td.appendChild($button);
+				$tr.appendChild($td);
+
+				$table.appendChild($tr);
+				console.log(resultAry[idx].firstName, resultAry[idx].lastName);
+			}
+
+			document.getElementById("show").appendChild($table);
+		}
+	</script>
+</body>
+</html>

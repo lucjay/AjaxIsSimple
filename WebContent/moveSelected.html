@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	// :selected 속성을 이용한 이벤트 활용.
+	$(document).ready(function() {
+		$("#plus").on("click", function() {
+			var selected = $("#subjects :selected");
+			var par = $("#rejects");
+			par.append(selected);
+			
+			$.each($("#subjects option"), function (i,o) {
+				console.log(i,o)
+				
+			})
+		})
+
+		$("#moveMi").on("click", function() {
+			var selected = $("#rejects :selected");
+			var par = $("#subjects");
+			par.append(selected);
+
+		})
+	});
+	
+	function movePlus() {
+	}
+
+	function moveMi() {
+
+	}
+</script>
+</head>
+
+<body>
+	<h3>선택한 option을 상대편으로 옮기기</h3>
+	<form>
+		<select name="subjects" id="subjects" size="10">
+			<option class="sub">취미1-1</option>
+			<option class="sub">취미2-1</option>
+			<option class="sub">취미3-1</option>
+			<option class="sub">취미4-1</option>
+			<option class="sub">취미5-1</option>
+		</select>
+
+		<button type="button" id="plus">+</button>
+		<button type="button" id="moveMi">-</button>
+
+		<select name="rejects" id="rejects" size="10">
+			<option class="rej">취미2-1</option>
+			<option class="rej">취미2-2</option>
+			<option class="rej">취미2-3</option>
+			<option class="rej">취미2-4</option>
+			<option class="rej">취미2-5</option>
+		</select>
+	</form>
+
+</body>
+
+</html>
